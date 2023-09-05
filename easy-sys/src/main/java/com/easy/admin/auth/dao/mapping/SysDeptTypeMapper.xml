@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.easy.admin.auth.dao.SysDeptTypeMapper">
+
+    <resultMap id="BaseResultMap" type="com.easy.admin.auth.model.SysDeptType">
+        <id column="id" property="id"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="code" property="code"/>
+        <result column="name" property="name"/>
+        <result column="remarks" property="remarks"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="status" property="status"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="version" property="version"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_date" property="createDate"/>
+        <result column="edit_user" property="editUser"/>
+        <result column="edit_date" property="editDate"/>
+    </resultMap>
+    <select id="select" resultType="com.easy.admin.auth.model.SysDeptType">
+        select t.id, t.parent_id, t.name, t.code, t.status, t.order_no, t.remarks, t.tenant_id, t.version, t.edit_date, su.nickname as edit_user
+        from sys_dept_type t
+        left join sys_user su on su.id = t.edit_user
+        <where>
+            ${ew.sqlSegment}
+        </where>
+        order by t.order_no
+    </select>
+    <select id="getById" resultType="com.easy.admin.auth.model.SysDeptType">
+        select t.id, t.parent_id, t.code, t.name, t.order_no, t.status, t.remarks, t.tenant_id, t.version
+        from sys_dept_type t
+        where t.id= #{id}
+    </select>
+    <select id="selectRoles" resultType="java.lang.String">
+        select role_id from sys_dept_type_role tr where tr.dept_type_id = #{id}
+    </select>
+    <select id="getMaxOrderNo" resultType="java.lang.Integer">
+        select ifnull(max(order_no), 0) from sys_dept_type t where
+        <if test="parentId != null">
+            t.parent_id = #{parentId}
+        </if>
+        <if test="parentId == null">
+            t.parent_id is null
+        </if>
+    </select>
+    <select id="selectAll" resultType="com.easy.admin.core.common.tree.Tree">
+        select t.id, t.parent_id, t.name as title, t.code as `key`, t.code as data
+        from sys_dept_type t
+        where t.status = #{status}
+        order by t.order_no
+    </select>
+    <select id="selectChildCount" resultType="java.lang.Integer">
+        select count(1) from sys_dept_type sdt where sdt.parent_id = (select id from sys_dept_type sdt2 where sdt2.code = #{code})
+    </select>
+
+    <update id="updateOrderBatch">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update sys_dept_type
+            <set>
+                parent_id = #{item.parentId},
+                order_no = #{item.orderNo}
+            </set>
+            where id = #{item.id}
+        </foreach>
+    </update>
+</mapper>

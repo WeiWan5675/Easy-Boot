@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.easy.admin.sys.dao.SysConfigMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.easy.admin.sys.model.SysConfig">
+        <id column="id" property="id" />
+        <result column="sys_key" property="sysKey" />
+        <result column="value" property="value" />
+        <result column="type" property="type" />
+        <result column="sys" property="sys" />
+        <result column="remarks" property="remarks" />
+        <result column="version" property="version" />
+        <result column="create_date" property="createDate" />
+        <result column="create_user" property="createUser" />
+        <result column="edit_date" property="editDate" />
+        <result column="edit_user" property="editUser" />
+    </resultMap>
+    <select id="select" resultType="com.easy.admin.sys.model.SysConfig">
+        select t.id, t.sys_key, t.value, t.type, t.sys, t.remarks, t.edit_date, su.nickname as edit_user from sys_config t
+            left join sys_user su on su.id = t.edit_user
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+</mapper>

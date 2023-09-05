@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.easy.admin.sys.dao.SysDictTypeMapper">
+
+    <resultMap id="BaseResultMap" type="com.easy.admin.sys.model.SysDictType">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="type" property="type"/>
+        <result column="status" property="status"/>
+        <result column="sys" property="sys"/>
+        <result column="version" property="version"/>
+        <result column="create_date" property="createDate"/>
+        <result column="create_user" property="createUser"/>
+        <result column="edit_user" property="editUser"/>
+        <result column="edit_date" property="editDate"/>
+    </resultMap>
+
+    <select id="select" resultType="com.easy.admin.sys.model.SysDictType">
+        select t.id, t.name, t.type, t.status, t.sys, su.nickname as edit_user, t.edit_date
+        from sys_dict_type t
+        left join sys_user su on su.id = t.edit_user
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+    <select id="selectType" resultType="com.easy.admin.core.common.select.Select">
+        select type as value,concat(name, '（', type, '）') as label
+        from sys_dict_type
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <select id="countDict" resultType="java.lang.Integer">
+        select count(1) from sys_dict t left join sys_dict_type dt on dt.type = t.dict_type
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+</mapper>

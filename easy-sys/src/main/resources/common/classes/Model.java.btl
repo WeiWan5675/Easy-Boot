@@ -1,0 +1,97 @@
+package ${basicsConfig.packagePath}.model;
+
+<% for(import in tableInfo.importPackages){ %>
+import ${import};
+<% } %>
+<% for(import in imports){ %>
+import ${import.name};
+<% } %>
+
+/**
+ * ${basicsConfig.businessName}
+ *
+ * @author ${basicsConfig.author}
+ * @date ${date}
+ */
+@TableName("${tableInfo.name}")
+public class ${basicsConfig.modelName} extends Model<${basicsConfig.modelName}> {
+
+    <% for(item in tableInfo.fields){ %>
+    <% if(strUtil.isNotBlank(item.comment)) { %>
+    /**
+     * ${item.comment}
+     */
+    <% }else if(commonComment[item.propertyName] != null){ %>
+    /**
+     * ${commonComment[item.propertyName]}
+     */
+    <% } %>
+    <% if(item.keyFlag) { %>
+    @TableId
+    <% } %>
+    <% if("version" == item.propertyName) { %>
+    @Version
+    <% } %>
+    <% if("editUser" == item.propertyName || "editDate" == item.propertyName){ %>
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    <% } else if ("createUser" == item.propertyName || "createDate" == item.propertyName) { %>
+    @TableField(fill = FieldFill.INSERT)
+    <% } %>
+    <% if(basicsConfig.isGeneratorMethodsExport){ %>${GeneratorJavaUtil.generatorExport(item.propertyName, exportConfig)}<% } %>${GeneratorJavaUtil.generatorVerification(item.propertyName, inputConfig)}private ${item.propertyType} ${item.propertyName};
+    <% } %>
+
+    // 非表字段
+    <% for(item in queryConfig){ %>
+    <% if(item.matchingMode == 'start_end'){ %>
+    /**
+     * ${item.label} - 开始时间
+     */
+    @TableField(exist=false)
+    private Date start${strUtil.upperFirst(item.propertyName)};
+    /**
+     * ${item.label} - 结束时间
+     */
+    @TableField(exist=false)
+    private Date end${strUtil.upperFirst(item.propertyName)};
+    <% } %>
+    <% } %>
+
+    @Override
+    public Serializable pkVal() {
+        return this.id;
+    }
+
+    <% for(item in tableInfo.fields){ %>
+    public ${item.propertyType} get${item.capitalName}() {
+        return ${item.propertyName};
+    }
+
+    public void set${item.capitalName}(${item.propertyType} ${item.propertyName}) {
+        this.${item.propertyName} = ${item.propertyName};
+    }
+
+    <% } %>
+
+    <% for(item in queryConfig){ %>
+    <% if(item.matchingMode == 'start_end'){ %>
+    <% propertyName = 'start' + strUtil.upperFirst(item.propertyName); %>
+    public ${item.propertyType} get${strUtil.upperFirst(propertyName)}() {
+        return ${propertyName};
+    }
+
+    public void set${strUtil.upperFirst(propertyName)}(${item.propertyType} ${propertyName}) {
+        this.${propertyName} = ${propertyName};
+    }
+
+    <% propertyName = 'end' + strUtil.upperFirst(item.propertyName); %>
+    public ${item.propertyType} get${strUtil.upperFirst(propertyName)}() {
+        return ${propertyName};
+    }
+
+    public void set${strUtil.upperFirst(propertyName)}(${item.propertyType} ${propertyName}) {
+        this.${propertyName} = ${propertyName};
+    }
+
+    <% } %>
+    <% } %>
+}

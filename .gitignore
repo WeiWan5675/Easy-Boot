@@ -1,0 +1,28 @@
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+easy_web/node_modules
+.tmp
+logs
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+*/target
+
+
+**/**/target/**
+*.class
+
+### mac ###
+.DS_Store
+*/.DS_Store
+
+### project ###
+logs
