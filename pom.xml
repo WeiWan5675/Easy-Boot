@@ -58,21 +58,6 @@
             </dependency>
             <dependency>
                 <groupId>com.easy.admin</groupId>
-                <artifactId>easy-mybatis</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.easy.admin</groupId>
-                <artifactId>easy-redis</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.easy.admin</groupId>
-                <artifactId>easy-swagger</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.easy.admin</groupId>
                 <artifactId>easy-sys</artifactId>
                 <version>${project.version}</version>
             </dependency>
